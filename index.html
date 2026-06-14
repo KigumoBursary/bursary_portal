@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bursary Portal</title>
+    <style>
+        :root {
+            --text-dark: #22252a;
+            --text-muted: #72777a;
+            --border-color: #ebebeb;
+            --tab-active: #4a90e2;
+            --bg-light: #f9fbfd;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Navbar */
+        .navbar {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            height: 32px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0 12px 0 0;
+            color: var(--text-dark);
+            display: none;
+        }
+
+        .search-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding-bottom: 70px;
+        }
+
+        /* Student Directory List View */
+        .student-list {
+            display: block;
+        }
+
+        .student-item {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .student-item:active {
+            background-color: #f5f5f5;
+        }
+
+        .student-item .name {
+            font-weight: 700;
+            font-size: 15px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .student-item .amount {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Student Detailed View */
+        .detail-view {
+            display: none;
+            padding: 24px 16px;
+        }
+
+        .detail-group {
+            margin-bottom: 20px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            line-height: 1.4;
+        }
+
+        /* Fixed Bottom Navigation Tabs */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: white;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .nav-tab {
+            flex: 1;
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            gap: 4px;
+        }
+
+        .nav-tab svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        .nav-tab.active {
+            color: #4379bc;
+        }
+        
+        .nav-tab.active .icon-wrapper {
+            background-color: #e2edf9;
+            padding: 4px 16px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-weight: 600;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <button class="back-btn" id="backBtn" onclick="showListView()">←</button>
+        <div class="search-container" id="searchContainer">
+            <input type="text" class="search-bar" id="searchInput" placeholder="Search student name or ID..." oninput="filterStudents()">
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="loader" id="loader">Loading student records...</div>
+        
+        <div class="student-list" id="studentList"></div>
+
+        <div class="detail-view" id="detailView">
+            <div class="detail-group">
+                <div class="detail-label">Student Name:</div>
+                <div class="detail-value" id="detName">-</div>
+            </div>
+            <div class="detail-group">
+                <div class="detail-label">School:</div>
+                <div class="detail-value" id="detSchool">-</div>
+            </div>
+            <div class="detail-group">
+                <div class="detail-label">Reg. No:</div>
+                <div class="detail-value" id="detReg">-</div>
+            </div>
+            <div class="detail-group">
+                <div class="detail-label">Amount:</div>
+                <div class="detail-value" id="detAmount">-</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-tab active" id="collegeTab" onclick="switchTab('college')">
+            <div class="icon-wrapper">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM3.47 9L12 4.35 20.53 9 12 13.65 3.47 9zM6 12.63c0 .02 0 .04-.02.06C7.4 14.11 9.61 15 12 15c2.39 0 4.6-.89 6.02-2.31.01-.02.01-.04.02-.06v2.74c-1.42 1.42-3.63 2.31-6.02 2.31s-4.6-.89-6.02-2.31v-2.74z"/></svg>
+            </div>
+            College Students
+        </button>
+        <button class="nav-tab" id="universityTab" onclick="switchTab('university')">
+            <div class="icon-wrapper">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+            </div>
+            University Students
+        </button>
+    </div>
+
+    <script>
+        // Master script link configuration
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwnuwtZaZ_dtiVnCq6BOxgf-s5L8_RY0XHA7l2eXOsel58Kqv8tgtfiO_Clidk5g9Dp/exec"; 
+        
+        let currentTab = 'college';
+        let allStudentsData = []; 
+
+        window.onload = () => {
+            loadData(currentTab);
+        };
+
+        // Handles filtering and sorting fallback references gracefully
+        function getStudentNameValue(studentObj) {
+            for (let key in studentObj) {
+                if (key.toLowerCase().replace(/[^a-z]/g, '').includes('name')) {
+                    return (studentObj[key] || "").toString().trim();
+                }
+            }
+            return "";
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.getElementById('collegeTab').classList.toggle('active', tab === 'college');
+            document.getElementById('universityTab').classList.toggle('active', tab === 'university');
+            showListView();
+            loadData(tab);
+        }
+
+        function loadData(category) {
+            const loader = document.getElementById('loader');
+            const listContainer = document.getElementById('studentList');
+            
+            loader.style.display = 'block';
+            listContainer.innerHTML = '';
+            
+            fetch(SCRIPT_URL + "?type=" + category)
+                .then(res => res.json())
+                .then(response => {
+                    loader.style.display = 'none';
+                    if(response.status === "success") {
+                        allStudentsData = response.data;
+                        
+                        // Sort incoming rows alphabetically A-Z dynamically 
+                        allStudentsData.sort((a, b) => {
+                            let nameA = getStudentNameValue(a).toLowerCase();
+                            let nameB = getStudentNameValue(b).toLowerCase();
+                            return nameA.localeCompare(nameB);
+                        });
+                        
+                        // Smart Key Mapper normalization
+                        allStudentsData = allStudentsData.map(row => {
+                            let normalized = {};
+                            for (let origKey in row) {
+                                let key = origKey.toLowerCase().replace(/[^a-z]/g, '');
+                                if (key.includes('name')) normalized['name'] = row[origKey];
+                                else if (key.includes('institution') || key.includes('school')) normalized['school'] = row[origKey];
+                                else if (key.includes('reg') || key.includes('no')) normalized['reg'] = row[origKey];
+                                else if (key.includes('amount')) normalized['amount'] = row[origKey];
+                            }
+                            return normalized;
+                        });
+                        
+                        if (allStudentsData.length === 0) {
+                            listContainer.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted);">No records found.</div>';
+                        } else {
+                            renderList(allStudentsData);
+                        }
+                    } else {
+                        listContainer.innerHTML = '<div style="text-align:center; padding:30px; color:red;">An error occurred while retrieval was executing.</div>';
+                    }
+                })
+                .catch(err => {
+                    loader.style.display = 'none';
+                    listContainer.innerHTML = '<div style="text-align:center; padding:30px; color:red;">Unable to safely establish connection. Please reload.</div>';
+                    console.error(err);
+                });
+        }
+
+        function renderList(students) {
+            const listContainer = document.getElementById('studentList');
+            listContainer.innerHTML = '';
+            
+            students.forEach((student) => {
+                const item = document.createElement('div');
+                item.className = 'student-item';
+                item.onclick = () => showDetailView(student);
+                
+                let displayName = student['name'] || "Unnamed Record";
+                let displayAmount = student['amount'] || "0.00";
+                
+                item.innerHTML = `
+                    <div class="name">${displayName}</div>
+                    <div class="amount">${displayAmount}</div>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        function filterStudents() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allStudentsData.filter(student => 
+                (student['name'] && student['name'].toLowerCase().includes(query)) || 
+                (student['reg'] && student['reg'].toString().toLowerCase().includes(query))
+            );
+            renderList(filtered);
+        }
+
+        function showDetailView(student) {
+            document.getElementById('studentList').style.display = 'none';
+            document.getElementById('searchContainer').style.display = 'none';
+            document.getElementById('backBtn').style.display = 'block';
+            document.getElementById('detailView').style.display = 'block';
+
+            document.getElementById('detName').innerText = student['name'] || "N/A";
+            document.getElementById('detSchool').innerText = student['school'] || "N/A";
+            document.getElementById('detReg').innerText = student['reg'] || "N/A";
+            document.getElementById('detAmount').innerText = student['amount'] || "N/A";
+        }
+
+        function showListView() {
+            document.getElementById('studentList').style.display = 'block';
+            document.getElementById('searchContainer').style.display = 'flex';
+            document.getElementById('backBtn').style.display = 'none';
+            document.getElementById('detailView').style.display = 'none';
+            document.getElementById('searchInput').value = '';
+        }
+    </script>
+</body>
+</html>
