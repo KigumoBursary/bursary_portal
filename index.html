@@ -24,7 +24,24 @@
             min-height: 100vh;
         }
 
-        /* Top Navbar */
+        /* Top Header Banner Area */
+        .header-banner-container {
+            width: 100%;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-banner {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Top Navbar containing Search & Back Button */
         .navbar {
             display: flex;
             align-items: center;
@@ -184,6 +201,10 @@
 </head>
 <body>
 
+    <div class="header-banner-container" id="headerBannerArea">
+        <img src="Cyber Monday - Leaderboard Ad - Made with PosterMyWall.png" alt="Bursary Verification Portal Banner" class="header-banner">
+    </div>
+
     <div class="navbar">
         <button class="back-btn" id="backBtn" onclick="showListView()">←</button>
         <div class="search-container" id="searchContainer">
@@ -192,7 +213,7 @@
     </div>
 
     <div class="content">
-        <div class="loader" id="loader">Loading beneficiaries records...</div>
+        <div class="loader" id="loader">Loading beneficiary records...</div>
         
         <div class="student-list" id="studentList"></div>
 
@@ -342,6 +363,7 @@
         function showDetailView(student) {
             document.getElementById('studentList').style.display = 'none';
             document.getElementById('searchContainer').style.display = 'none';
+            document.getElementById('headerBannerArea').style.display = 'none'; // Hide banner on detail card view
             document.getElementById('backBtn').style.display = 'block';
             document.getElementById('detailView').style.display = 'block';
 
@@ -354,6 +376,7 @@
         function showListView() {
             document.getElementById('studentList').style.display = 'block';
             document.getElementById('searchContainer').style.display = 'flex';
+            document.getElementById('headerBannerArea').style.display = 'flex'; // Bring back banner on main directory list
             document.getElementById('backBtn').style.display = 'none';
             document.getElementById('detailView').style.display = 'none';
             document.getElementById('searchInput').value = '';
