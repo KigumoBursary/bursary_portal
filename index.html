@@ -24,21 +24,34 @@
             min-height: 100vh;
         }
 
-        /* Top Header Banner Area */
-        .header-banner-container {
+        /* Native Text Header Layout Styling */
+        .text-header-container {
             width: 100%;
+            padding: 20px 16px 12px 16px;
+            box-sizing: border-box;
             background: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            text-align: center;
             border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
-        .header-banner {
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            display: block;
+        .header-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         /* Top Navbar containing Search & Back Button */
@@ -201,10 +214,13 @@
 </head>
 <body>
 
-    <div class="header-banner-container" id="headerBannerArea">
-        <img src="Cyber Monday - Leaderboard Ad - Made with PosterMyWall.png" alt="Bursary Verification Portal Banner" class="header-banner">
+    <!-- Native Official Text Header -->
+    <div class="text-header-container" id="textHeaderArea">
+        <h1 class="header-title">Hon. Joseph Kamau Munyoro, MP Kigumo</h1>
+        <p class="header-subtitle">2026 Bursary beneficiaries - Tertiary</p>
     </div>
 
+    <!-- Dynamic Top Navbar Header -->
     <div class="navbar">
         <button class="back-btn" id="backBtn" onclick="showListView()">←</button>
         <div class="search-container" id="searchContainer">
@@ -212,11 +228,14 @@
         </div>
     </div>
 
+    <!-- Main Content Area -->
     <div class="content">
-        <div class="loader" id="loader">Loading beneficiaries...</div>
+        <div class="loader" id="loader">Loading beneficiary records...</div>
         
+        <!-- List View Container -->
         <div class="student-list" id="studentList"></div>
 
+        <!-- Detailed Profile View Container -->
         <div class="detail-view" id="detailView">
             <div class="detail-group">
                 <div class="detail-label">Student Name:</div>
@@ -237,6 +256,7 @@
         </div>
     </div>
 
+    <!-- Bottom Navigation Bar -->
     <div class="bottom-nav">
         <button class="nav-tab active" id="collegeTab" onclick="switchTab('college')">
             <div class="icon-wrapper">
@@ -363,7 +383,7 @@
         function showDetailView(student) {
             document.getElementById('studentList').style.display = 'none';
             document.getElementById('searchContainer').style.display = 'none';
-            document.getElementById('headerBannerArea').style.display = 'none'; // Hide banner on detail card view
+            document.getElementById('textHeaderArea').style.display = 'none'; // Hide text header when looking at individual detail cards
             document.getElementById('backBtn').style.display = 'block';
             document.getElementById('detailView').style.display = 'block';
 
@@ -376,7 +396,7 @@
         function showListView() {
             document.getElementById('studentList').style.display = 'block';
             document.getElementById('searchContainer').style.display = 'flex';
-            document.getElementById('headerBannerArea').style.display = 'flex'; // Bring back banner on main directory list
+            document.getElementById('textHeaderArea').style.display = 'flex'; // Restore text header when returning to main directory lists
             document.getElementById('backBtn').style.display = 'none';
             document.getElementById('detailView').style.display = 'none';
             document.getElementById('searchInput').value = '';
