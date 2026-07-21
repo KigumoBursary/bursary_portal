@@ -6,30 +6,39 @@
     <title>Bursary Portal</title>
     <style>
         :root {
-            --text-dark: #22252a;
-            --text-muted: #72777a;
-            --border-color: #ebebeb;
-            --tab-active: #4a90e2;
-            --bg-light: #f9fbfd;
+            --primary: #1e3a8a;
+            --primary-light: #eff6ff;
+            --primary-accent: #3b82f6;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --bg-light: #f8fafc;
+            --card-bg: #ffffff;
+            --badge-green: #dcfce7;
+            --badge-green-text: #166534;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #ffffff;
+            background-color: var(--bg-light);
             color: var(--text-dark);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* Native Text Header Layout Styling */
         .text-header-container {
             width: 100%;
-            padding: 20px 16px 12px 16px;
-            box-sizing: border-box;
-            background: #ffffff;
+            padding: 24px 20px 16px 20px;
+            background: var(--card-bg);
             text-align: center;
             border-bottom: 1px solid var(--border-color);
             display: flex;
@@ -38,42 +47,43 @@
         }
 
         .header-title {
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 800;
             color: var(--text-dark);
             margin: 0;
-            letter-spacing: -0.2px;
+            letter-spacing: -0.3px;
         }
 
         .header-subtitle {
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 700;
             color: var(--text-muted);
             margin: 0;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
         }
 
         /* Top Navbar containing Search & Back Button */
         .navbar {
             display: flex;
             align-items: center;
-            padding: 12px 16px;
+            padding: 10px 16px;
             border-bottom: 1px solid var(--border-color);
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
             position: sticky;
             top: 0;
             z-index: 10;
-            height: 32px;
         }
 
         .back-btn {
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: 20px;
+            font-weight: bold;
             cursor: pointer;
-            padding: 0 12px 0 0;
-            color: var(--text-dark);
+            padding: 6px 12px 6px 0;
+            color: var(--primary);
             display: none;
         }
 
@@ -85,71 +95,140 @@
 
         .search-bar {
             width: 100%;
-            padding: 8px 12px;
+            padding: 10px 14px;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 15px;
+            border-radius: 8px;
+            font-size: 14px;
             outline: none;
+            background: var(--bg-light);
+            transition: all 0.2s ease;
+        }
+
+        .search-bar:focus {
+            background: #ffffff;
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
 
         /* Content Area */
         .content {
             flex: 1;
-            padding-bottom: 70px;
+            padding-bottom: 80px;
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
         }
 
         /* Student Directory List View */
         .student-list {
             display: block;
+            background: var(--card-bg);
         }
 
         .student-item {
-            padding: 14px 16px;
+            padding: 16px 20px;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.15s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .student-item:active {
-            background-color: #f5f5f5;
+        .student-item:active, .student-item:hover {
+            background-color: var(--primary-light);
+        }
+
+        .student-item .info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
 
         .student-item .name {
             font-weight: 700;
-            font-size: 15px;
+            font-size: 14px;
             text-transform: uppercase;
-            margin-bottom: 4px;
+            color: var(--text-dark);
         }
 
-        .student-item .amount {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-dark);
+        .student-item .reg-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .student-item .amount-badge {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--badge-green-text);
+            background-color: var(--badge-green);
+            padding: 4px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
         }
 
         /* Student Detailed View */
         .detail-view {
             display: none;
-            padding: 24px 16px;
+            padding: 20px 16px;
+        }
+
+        .detail-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .detail-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .detail-group:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
         }
 
         .detail-label {
-            font-size: 12px;
+            font-size: 11px;
+            font-weight: 700;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .detail-value {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
+            color: var(--text-dark);
             text-transform: uppercase;
             line-height: 1.4;
+        }
+
+        /* Skeleton Loading UI */
+        .skeleton-loader {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .skeleton-card {
+            height: 56px;
+            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         /* Fixed Bottom Navigation Tabs */
@@ -159,7 +238,7 @@
             left: 0;
             right: 0;
             height: 64px;
-            background: white;
+            background: var(--card-bg);
             border-top: 1px solid var(--border-color);
             display: flex;
             justify-content: space-around;
@@ -182,6 +261,7 @@
             text-transform: uppercase;
             letter-spacing: 0.3px;
             gap: 4px;
+            padding: 6px 0;
         }
 
         .nav-tab svg {
@@ -191,24 +271,16 @@
         }
 
         .nav-tab.active {
-            color: #4379bc;
+            color: var(--primary);
         }
         
         .nav-tab.active .icon-wrapper {
-            background-color: #e2edf9;
-            padding: 4px 16px;
+            background-color: var(--primary-light);
+            padding: 4px 18px;
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .loader {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-muted);
-            font-weight: 600;
-            display: none;
         }
     </style>
 </head>
@@ -222,36 +294,45 @@
 
     <!-- Dynamic Top Navbar Header -->
     <div class="navbar">
-        <button class="back-btn" id="backBtn" onclick="showListView()">←</button>
+        <button class="back-btn" id="backBtn" onclick="showListView()">← Back</button>
         <div class="search-container" id="searchContainer">
-            <input type="text" class="search-bar" id="searchInput" placeholder="Search student name or Reg./Adm. no." oninput="filterStudents()">
+            <input type="text" class="search-bar" id="searchInput" placeholder="Search student name or Reg./Adm. no." oninput="debouncedFilter()">
         </div>
     </div>
 
     <!-- Main Content Area -->
     <div class="content">
-        <div class="loader" id="loader">Loading beneficiaries...</div>
+        <!-- Skeleton Loader -->
+        <div class="skeleton-loader" id="loader">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+        </div>
         
         <!-- List View Container -->
         <div class="student-list" id="studentList"></div>
 
         <!-- Detailed Profile View Container -->
         <div class="detail-view" id="detailView">
-            <div class="detail-group">
-                <div class="detail-label">Student Name:</div>
-                <div class="detail-value" id="detName">-</div>
-            </div>
-            <div class="detail-group">
-                <div class="detail-label">School:</div>
-                <div class="detail-value" id="detSchool">-</div>
-            </div>
-            <div class="detail-group">
-                <div class="detail-label">Reg. No:</div>
-                <div class="detail-value" id="detReg">-</div>
-            </div>
-            <div class="detail-group">
-                <div class="detail-label">Amount:</div>
-                <div class="detail-value" id="detAmount">-</div>
+            <div class="detail-card">
+                <div class="detail-group">
+                    <div class="detail-label">Student Name</div>
+                    <div class="detail-value" id="detName">-</div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">School / Institution</div>
+                    <div class="detail-value" id="detSchool">-</div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">Reg. / Adm. No</div>
+                    <div class="detail-value" id="detReg">-</div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">Allocated Amount</div>
+                    <div class="detail-value" id="detAmount" style="color: var(--primary);">-</div>
+                </div>
             </div>
         </div>
     </div>
@@ -273,17 +354,14 @@
     </div>
 
     <script>
-        // Master script link configuration
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzx83jzC4sfvmv7y0ngUvMor0p1lZwImZdua1aDOf8GQTjTURvUyAwqswyKrBO3d41M/exec"; 
         
         let currentTab = 'college';
         let allStudentsData = []; 
+        let searchTimeout;
 
-        window.onload = () => {
-            loadData(currentTab);
-        };
+        window.onload = () => loadData(currentTab);
 
-        // Handles filtering and sorting fallback references gracefully
         function getStudentNameValue(studentObj) {
             for (let key in studentObj) {
                 if (key.toLowerCase().replace(/[^a-z]/g, '').includes('name')) {
@@ -294,6 +372,7 @@
         }
 
         function switchTab(tab) {
+            if (currentTab === tab) return;
             currentTab = tab;
             document.getElementById('collegeTab').classList.toggle('active', tab === 'college');
             document.getElementById('universityTab').classList.toggle('active', tab === 'university');
@@ -305,7 +384,7 @@
             const loader = document.getElementById('loader');
             const listContainer = document.getElementById('studentList');
             
-            loader.style.display = 'block';
+            loader.style.display = 'flex';
             listContainer.innerHTML = '';
             
             fetch(SCRIPT_URL + "?type=" + category)
@@ -313,17 +392,9 @@
                 .then(response => {
                     loader.style.display = 'none';
                     if(response.status === "success") {
-                        allStudentsData = response.data;
                         
-                        // Sort incoming rows alphabetically A-Z dynamically 
-                        allStudentsData.sort((a, b) => {
-                            let nameA = getStudentNameValue(a).toLowerCase();
-                            let nameB = getStudentNameValue(b).toLowerCase();
-                            return nameA.localeCompare(nameB);
-                        });
-                        
-                        // Smart Key Mapper normalization
-                        allStudentsData = allStudentsData.map(row => {
+                        // Map & normalize properties cleanly
+                        allStudentsData = response.data.map(row => {
                             let normalized = {};
                             for (let origKey in row) {
                                 let key = origKey.toLowerCase().replace(/[^a-z]/g, '');
@@ -334,26 +405,36 @@
                             }
                             return normalized;
                         });
-                        
+
+                        // Sort A-Z
+                        allStudentsData.sort((a, b) => {
+                            let nameA = (a.name || "").toLowerCase();
+                            let nameB = (b.name || "").toLowerCase();
+                            return nameA.localeCompare(nameB);
+                        });
+
                         if (allStudentsData.length === 0) {
-                            listContainer.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted);">No records found.</div>';
+                            listContainer.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-muted);">No records found.</div>';
                         } else {
                             renderList(allStudentsData);
                         }
                     } else {
-                        listContainer.innerHTML = '<div style="text-align:center; padding:30px; color:red;">An error occurred while retrieval was executing.</div>';
+                        listContainer.innerHTML = '<div style="text-align:center; padding:40px; color:red;">An error occurred while loading data.</div>';
                     }
                 })
                 .catch(err => {
                     loader.style.display = 'none';
-                    listContainer.innerHTML = '<div style="text-align:center; padding:30px; color:red;">Unable to safely establish connection. Please reload.</div>';
+                    listContainer.innerHTML = '<div style="text-align:center; padding:40px; color:red;">Unable to establish connection. Please retry.</div>';
                     console.error(err);
                 });
         }
 
+        // Optimized DOM Builder using DocumentFragment
         function renderList(students) {
             const listContainer = document.getElementById('studentList');
             listContainer.innerHTML = '';
+
+            const fragment = document.createDocumentFragment();
             
             students.forEach((student) => {
                 const item = document.createElement('div');
@@ -361,18 +442,34 @@
                 item.onclick = () => showDetailView(student);
                 
                 let displayName = student['name'] || "Unnamed Record";
-                let displayAmount = student['amount'] || "0.00";
+                let displayReg = student['reg'] ? `Reg: ${student['reg']}` : "No Reg. Number";
+                let displayAmount = student['amount'] ? `Ksh ${student['amount']}` : "Ksh 0";
                 
                 item.innerHTML = `
-                    <div class="name">${displayName}</div>
-                    <div class="amount">${displayAmount}</div>
+                    <div class="info">
+                        <div class="name">${displayName}</div>
+                        <div class="reg-sub">${displayReg}</div>
+                    </div>
+                    <div class="amount-badge">${displayAmount}</div>
                 `;
-                listContainer.appendChild(item);
+                fragment.appendChild(item);
             });
+
+            listContainer.appendChild(fragment);
+        }
+
+        // Input Debounce to prevent lag during fast typing
+        function debouncedFilter() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(filterStudents, 150);
         }
 
         function filterStudents() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            if (!query) {
+                renderList(allStudentsData);
+                return;
+            }
             const filtered = allStudentsData.filter(student => 
                 (student['name'] && student['name'].toLowerCase().includes(query)) || 
                 (student['reg'] && student['reg'].toString().toLowerCase().includes(query))
@@ -383,23 +480,24 @@
         function showDetailView(student) {
             document.getElementById('studentList').style.display = 'none';
             document.getElementById('searchContainer').style.display = 'none';
-            document.getElementById('textHeaderArea').style.display = 'none'; // Hide text header when looking at individual detail cards
+            document.getElementById('textHeaderArea').style.display = 'none';
             document.getElementById('backBtn').style.display = 'block';
             document.getElementById('detailView').style.display = 'block';
 
             document.getElementById('detName').innerText = student['name'] || "N/A";
             document.getElementById('detSchool').innerText = student['school'] || "N/A";
             document.getElementById('detReg').innerText = student['reg'] || "N/A";
-            document.getElementById('detAmount').innerText = student['amount'] || "N/A";
+            document.getElementById('detAmount').innerText = student['amount'] ? `Ksh ${student['amount']}` : "N/A";
         }
 
         function showListView() {
             document.getElementById('studentList').style.display = 'block';
             document.getElementById('searchContainer').style.display = 'flex';
-            document.getElementById('textHeaderArea').style.display = 'flex'; // Restore text header when returning to main directory lists
+            document.getElementById('textHeaderArea').style.display = 'flex';
             document.getElementById('backBtn').style.display = 'none';
             document.getElementById('detailView').style.display = 'none';
             document.getElementById('searchInput').value = '';
+            renderList(allStudentsData);
         }
     </script>
 </body>
