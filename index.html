@@ -133,6 +133,36 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
 
+        /* HORIZONTAL FILLING PROGRESS BAR */
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background-color: var(--border-color);
+            position: relative;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-accent), var(--primary));
+            transition: width 0.3s ease;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .progress-bar.loading {
+            animation: fillProgress 2.5s cubic-bezier(0.1, 0.5, 0.1, 1) forwards;
+        }
+
+        @keyframes fillProgress {
+            0% { width: 0%; }
+            20% { width: 25%; }
+            50% { width: 60%; }
+            80% { width: 85%; }
+            100% { width: 92%; }
+        }
+
         /* Content Area */
         .content {
             flex: 1;
@@ -169,7 +199,7 @@
             flex-direction: column;
             gap: 4px;
             flex: 1;
-            min-width: 0; /* Critical fix for text truncation & wrapping */
+            min-width: 0;
         }
 
         .student-item .name {
@@ -178,7 +208,7 @@
             text-transform: uppercase;
             color: var(--text-dark);
             white-space: normal;
-            word-break: break-word; /* Allows long student names to wrap */
+            word-break: break-word;
             line-height: 1.3;
         }
 
@@ -186,7 +216,7 @@
             font-size: 12px;
             color: var(--text-muted);
             white-space: normal;
-            word-break: break-word; /* Crucial fix: wraps "(Please visit Kigumo Office)" */
+            word-break: break-word;
             line-height: 1.3;
         }
 
@@ -198,7 +228,7 @@
             padding: 6px 10px;
             border-radius: 20px;
             white-space: nowrap;
-            flex-shrink: 0; /* Prevents badge from shrinking or leaving screen */
+            flex-shrink: 0;
             align-self: center;
         }
 
@@ -246,27 +276,6 @@
             text-transform: uppercase;
             line-height: 1.4;
             word-break: break-word;
-        }
-
-        /* Skeleton Loader */
-        .skeleton-loader {
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .skeleton-card {
-            height: 52px;
-            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 8px;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
         }
 
         /* STICKY BOTTOM NAVIGATION BAR */
@@ -342,17 +351,13 @@
             </div>
         </div>
 
+        <!-- Filling Horizontal Progress Bar -->
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
         <!-- Main Content Area -->
         <div class="content">
-            <!-- Skeleton Loader -->
-            <div class="skeleton-loader" id="loader">
-                <div class="skeleton-card"></div>
-                <div class="skeleton-card"></div>
-                <div class="skeleton-card"></div>
-                <div class="skeleton-card"></div>
-                <div class="skeleton-card"></div>
-            </div>
-            
             <!-- List View Container -->
             <div class="student-list" id="studentList"></div>
 
@@ -405,6 +410,24 @@
 
         window.onload = () => loadData(currentTab);
 
+        function showProgressBar() {
+            const container = document.getElementById('progressContainer');
+            const bar = document.getElementById('progressBar');
+            container.style.display = 'block';
+            bar.className = 'progress-bar loading';
+        }
+
+        function hideProgressBar() {
+            const container = document.getElementById('progressContainer');
+            const bar = document.getElementById('progressBar');
+            bar.style.width = '100%';
+            setTimeout(() => {
+                container.style.display = 'none';
+                bar.className = 'progress-bar';
+                bar.style.width = '0%';
+            }, 300);
+        }
+
         function switchTab(tab) {
             if (currentTab === tab && document.getElementById('studentList').style.display !== 'none') return;
             currentTab = tab;
@@ -415,18 +438,15 @@
         }
 
         function loadData(category) {
-            const loader = document.getElementById('loader');
             const listContainer = document.getElementById('studentList');
-            
-            loader.style.display = 'flex';
+            showProgressBar();
             listContainer.innerHTML = '';
             
             fetch(SCRIPT_URL + "?type=" + category)
                 .then(res => res.json())
                 .then(response => {
-                    loader.style.display = 'none';
+                    hideProgressBar();
                     if(response.status === "success") {
-                        
                         allStudentsData = response.data.map(row => {
                             let normalized = {};
                             for (let origKey in row) {
@@ -455,7 +475,7 @@
                     }
                 })
                 .catch(err => {
-                    loader.style.display = 'none';
+                    hideProgressBar();
                     listContainer.innerHTML = '<div style="text-align:center; padding:40px; color:red;">Unable to establish connection. Please retry.</div>';
                     console.error(err);
                 });
