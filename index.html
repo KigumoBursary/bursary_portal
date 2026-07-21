@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bursary Portal</title>
     <style>
         :root {
@@ -16,47 +16,28 @@
             --card-bg: #ffffff;
             --badge-green: #dcfce7;
             --badge-green-text: #166534;
-            --nav-height: 64px;
         }
 
         * {
             box-sizing: border-box;
         }
 
-        html, body {
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             margin: 0;
             padding: 0;
-            width: 100%;
-            overflow-x: hidden;
-            background-color: #cbd5e1;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-light);
             color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
             -webkit-tap-highlight-color: transparent;
         }
 
-        body {
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        /* Enforce Mobile App Layout Frame */
-        .app-container {
-            width: 100%;
-            max-width: 480px;
-            background-color: var(--bg-light);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            overflow-x: hidden;
-        }
-
-        /* Header Layout */
+        /* Native Text Header Layout Styling */
         .text-header-container {
             width: 100%;
-            padding: 20px 16px 14px 16px;
+            padding: 24px 20px 16px 20px;
             background: var(--card-bg);
             text-align: center;
             border-bottom: 1px solid var(--border-color);
@@ -66,16 +47,15 @@
         }
 
         .header-title {
-            font-size: 17px;
+            font-size: 19px;
             font-weight: 800;
             color: var(--text-dark);
             margin: 0;
             letter-spacing: -0.3px;
-            word-wrap: break-word;
         }
 
         .header-subtitle {
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--text-muted);
             margin: 0;
@@ -83,7 +63,7 @@
             letter-spacing: 0.8px;
         }
 
-        /* Top Navbar Header */
+        /* Top Navbar containing Search & Back Button */
         .navbar {
             display: flex;
             align-items: center;
@@ -93,27 +73,24 @@
             backdrop-filter: blur(8px);
             position: sticky;
             top: 0;
-            z-index: 20;
-            width: 100%;
+            z-index: 10;
         }
 
         .back-btn {
             background: none;
             border: none;
-            font-size: 15px;
-            font-weight: 700;
+            font-size: 20px;
+            font-weight: bold;
             cursor: pointer;
             padding: 6px 12px 6px 0;
             color: var(--primary);
             display: none;
-            flex-shrink: 0;
         }
 
         .search-container {
             flex: 1;
             display: flex;
             align-items: center;
-            width: 100%;
         }
 
         .search-bar {
@@ -133,110 +110,67 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
 
-        /* HORIZONTAL FILLING PROGRESS BAR */
-        .progress-container {
-            width: 100%;
-            height: 4px;
-            background-color: var(--border-color);
-            position: relative;
-            overflow: hidden;
-            display: none;
-        }
-
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--primary-accent), var(--primary));
-            transition: width 0.3s ease;
-            border-radius: 0 2px 2px 0;
-        }
-
-        .progress-bar.loading {
-            animation: fillProgress 2.5s cubic-bezier(0.1, 0.5, 0.1, 1) forwards;
-        }
-
-        @keyframes fillProgress {
-            0% { width: 0%; }
-            20% { width: 25%; }
-            50% { width: 60%; }
-            80% { width: 85%; }
-            100% { width: 92%; }
-        }
-
         /* Content Area */
         .content {
             flex: 1;
-            padding-bottom: calc(var(--nav-height) + 20px);
+            padding-bottom: 80px;
+            max-width: 600px;
             width: 100%;
-            overflow-x: hidden;
+            margin: 0 auto;
         }
 
         /* Student Directory List View */
         .student-list {
             display: block;
             background: var(--card-bg);
-            width: 100%;
         }
 
         .student-item {
-            padding: 14px 16px;
+            padding: 16px 20px;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
             transition: background 0.15s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            width: 100%;
         }
 
-        .student-item:active {
+        .student-item:active, .student-item:hover {
             background-color: var(--primary-light);
         }
 
         .student-item .info {
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            flex: 1;
-            min-width: 0;
+            gap: 2px;
         }
 
         .student-item .name {
             font-weight: 700;
-            font-size: 13px;
+            font-size: 14px;
             text-transform: uppercase;
             color: var(--text-dark);
-            white-space: normal;
-            word-break: break-word;
-            line-height: 1.3;
         }
 
         .student-item .reg-sub {
             font-size: 12px;
             color: var(--text-muted);
-            white-space: normal;
-            word-break: break-word;
-            line-height: 1.3;
         }
 
         .student-item .amount-badge {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
             color: var(--badge-green-text);
             background-color: var(--badge-green);
-            padding: 6px 10px;
+            padding: 4px 10px;
             border-radius: 20px;
             white-space: nowrap;
-            flex-shrink: 0;
-            align-self: center;
         }
 
         /* Student Detailed View */
         .detail-view {
             display: none;
-            padding: 16px;
-            width: 100%;
+            padding: 20px 16px;
         }
 
         .detail-card {
@@ -245,11 +179,10 @@
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            word-break: break-word;
         }
 
         .detail-group {
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             padding-bottom: 12px;
             border-bottom: 1px dashed var(--border-color);
         }
@@ -270,30 +203,47 @@
         }
 
         .detail-value {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--text-dark);
             text-transform: uppercase;
             line-height: 1.4;
-            word-break: break-word;
         }
 
-        /* STICKY BOTTOM NAVIGATION BAR */
+        /* Skeleton Loading UI */
+        .skeleton-loader {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .skeleton-card {
+            height: 56px;
+            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Fixed Bottom Navigation Tabs */
         .bottom-nav {
             position: fixed;
             bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 480px;
-            height: var(--nav-height);
+            left: 0;
+            right: 0;
+            height: 64px;
             background: var(--card-bg);
             border-top: 1px solid var(--border-color);
             display: flex;
             justify-content: space-around;
             align-items: center;
-            z-index: 100;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 10;
         }
 
         .nav-tab {
@@ -310,13 +260,13 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.3px;
-            gap: 3px;
-            height: 100%;
+            gap: 4px;
+            padding: 6px 0;
         }
 
         .nav-tab svg {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             fill: currentColor;
         }
 
@@ -326,7 +276,7 @@
         
         .nav-tab.active .icon-wrapper {
             background-color: var(--primary-light);
-            padding: 4px 16px;
+            padding: 4px 18px;
             border-radius: 16px;
             display: flex;
             align-items: center;
@@ -336,69 +286,71 @@
 </head>
 <body>
 
-    <div class="app-container">
-        <!-- Native Text Header -->
-        <div class="text-header-container" id="textHeaderArea">
-            <h1 class="header-title">Hon. Joseph Kamau Munyoro, MP Kigumo</h1>
-            <p class="header-subtitle">2026 Bursary beneficiaries - Tertiary</p>
+    <!-- Native Official Text Header -->
+    <div class="text-header-container" id="textHeaderArea">
+        <h1 class="header-title">Hon. Joseph Kamau Munyoro, MP Kigumo</h1>
+        <p class="header-subtitle">2026 Bursary beneficiaries - Tertiary</p>
+    </div>
+
+    <!-- Dynamic Top Navbar Header -->
+    <div class="navbar">
+        <button class="back-btn" id="backBtn" onclick="showListView()">← Back</button>
+        <div class="search-container" id="searchContainer">
+            <input type="text" class="search-bar" id="searchInput" placeholder="Search student name or Reg./Adm. no." oninput="debouncedFilter()">
         </div>
+    </div>
 
-        <!-- Dynamic Top Navbar Header -->
-        <div class="navbar">
-            <button class="back-btn" id="backBtn" onclick="showListView()">← Back</button>
-            <div class="search-container" id="searchContainer">
-                <input type="text" class="search-bar" id="searchInput" placeholder="Search student name or Reg./Adm. no." oninput="debouncedFilter()">
-            </div>
+    <!-- Main Content Area -->
+    <div class="content">
+        <!-- Skeleton Loader -->
+        <div class="skeleton-loader" id="loader">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
         </div>
+        
+        <!-- List View Container -->
+        <div class="student-list" id="studentList"></div>
 
-        <!-- Filling Horizontal Progress Bar -->
-        <div class="progress-container" id="progressContainer">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-
-        <!-- Main Content Area -->
-        <div class="content">
-            <!-- List View Container -->
-            <div class="student-list" id="studentList"></div>
-
-            <!-- Detailed Profile View Container -->
-            <div class="detail-view" id="detailView">
-                <div class="detail-card">
-                    <div class="detail-group">
-                        <div class="detail-label">Student Name</div>
-                        <div class="detail-value" id="detName">-</div>
-                    </div>
-                    <div class="detail-group">
-                        <div class="detail-label">School / Institution</div>
-                        <div class="detail-value" id="detSchool">-</div>
-                    </div>
-                    <div class="detail-group">
-                        <div class="detail-label">Reg. / Adm. No</div>
-                        <div class="detail-value" id="detReg">-</div>
-                    </div>
-                    <div class="detail-group">
-                        <div class="detail-label">Allocated Amount</div>
-                        <div class="detail-value" id="detAmount" style="color: var(--primary);">-</div>
-                    </div>
+        <!-- Detailed Profile View Container -->
+        <div class="detail-view" id="detailView">
+            <div class="detail-card">
+                <div class="detail-group">
+                    <div class="detail-label">Student Name</div>
+                    <div class="detail-value" id="detName">-</div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">School / Institution</div>
+                    <div class="detail-value" id="detSchool">-</div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">Reg. / Adm. No</div>
+                    <div class="detail-value" id="detReg">-</div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">Allocated Amount</div>
+                    <div class="detail-value" id="detAmount" style="color: var(--primary);">-</div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Always Fixed Mobile Bottom Navigation -->
-        <div class="bottom-nav">
-            <button class="nav-tab active" id="collegeTab" onclick="switchTab('college')">
-                <div class="icon-wrapper">
-                    <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM3.47 9L12 4.35 20.53 9 12 13.65 3.47 9zM6 12.63c0 .02 0 .04-.02.06C7.4 14.11 9.61 15 12 15c2.39 0 4.6-.89 6.02-2.31.01-.02.01-.04.02-.06v2.74c-1.42 1.42-3.63 2.31-6.02 2.31s-4.6-.89-6.02-2.31v-2.74z"/></svg>
-                </div>
-                College
-            </button>
-            <button class="nav-tab" id="universityTab" onclick="switchTab('university')">
-                <div class="icon-wrapper">
-                    <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
-                </div>
-                University
-            </button>
-        </div>
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <button class="nav-tab active" id="collegeTab" onclick="switchTab('college')">
+            <div class="icon-wrapper">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM3.47 9L12 4.35 20.53 9 12 13.65 3.47 9zM6 12.63c0 .02 0 .04-.02.06C7.4 14.11 9.61 15 12 15c2.39 0 4.6-.89 6.02-2.31.01-.02.01-.04.02-.06v2.74c-1.42 1.42-3.63 2.31-6.02 2.31s-4.6-.89-6.02-2.31v-2.74z"/></svg>
+            </div>
+            College Students
+        </button>
+        <button class="nav-tab" id="universityTab" onclick="switchTab('university')">
+            <div class="icon-wrapper">
+                <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+            </div>
+            University Students
+        </button>
     </div>
 
     <script>
@@ -410,26 +362,17 @@
 
         window.onload = () => loadData(currentTab);
 
-        function showProgressBar() {
-            const container = document.getElementById('progressContainer');
-            const bar = document.getElementById('progressBar');
-            container.style.display = 'block';
-            bar.className = 'progress-bar loading';
-        }
-
-        function hideProgressBar() {
-            const container = document.getElementById('progressContainer');
-            const bar = document.getElementById('progressBar');
-            bar.style.width = '100%';
-            setTimeout(() => {
-                container.style.display = 'none';
-                bar.className = 'progress-bar';
-                bar.style.width = '0%';
-            }, 300);
+        function getStudentNameValue(studentObj) {
+            for (let key in studentObj) {
+                if (key.toLowerCase().replace(/[^a-z]/g, '').includes('name')) {
+                    return (studentObj[key] || "").toString().trim();
+                }
+            }
+            return "";
         }
 
         function switchTab(tab) {
-            if (currentTab === tab && document.getElementById('studentList').style.display !== 'none') return;
+            if (currentTab === tab) return;
             currentTab = tab;
             document.getElementById('collegeTab').classList.toggle('active', tab === 'college');
             document.getElementById('universityTab').classList.toggle('active', tab === 'university');
@@ -438,15 +381,19 @@
         }
 
         function loadData(category) {
+            const loader = document.getElementById('loader');
             const listContainer = document.getElementById('studentList');
-            showProgressBar();
+            
+            loader.style.display = 'flex';
             listContainer.innerHTML = '';
             
             fetch(SCRIPT_URL + "?type=" + category)
                 .then(res => res.json())
                 .then(response => {
-                    hideProgressBar();
+                    loader.style.display = 'none';
                     if(response.status === "success") {
+                        
+                        // Map & normalize properties cleanly
                         allStudentsData = response.data.map(row => {
                             let normalized = {};
                             for (let origKey in row) {
@@ -459,6 +406,7 @@
                             return normalized;
                         });
 
+                        // Sort A-Z
                         allStudentsData.sort((a, b) => {
                             let nameA = (a.name || "").toLowerCase();
                             let nameB = (b.name || "").toLowerCase();
@@ -475,12 +423,13 @@
                     }
                 })
                 .catch(err => {
-                    hideProgressBar();
+                    loader.style.display = 'none';
                     listContainer.innerHTML = '<div style="text-align:center; padding:40px; color:red;">Unable to establish connection. Please retry.</div>';
                     console.error(err);
                 });
         }
 
+        // Optimized DOM Builder using DocumentFragment
         function renderList(students) {
             const listContainer = document.getElementById('studentList');
             listContainer.innerHTML = '';
@@ -509,6 +458,7 @@
             listContainer.appendChild(fragment);
         }
 
+        // Input Debounce to prevent lag during fast typing
         function debouncedFilter() {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(filterStudents, 150);
@@ -538,8 +488,6 @@
             document.getElementById('detSchool').innerText = student['school'] || "N/A";
             document.getElementById('detReg').innerText = student['reg'] || "N/A";
             document.getElementById('detAmount').innerText = student['amount'] ? `Ksh ${student['amount']}` : "N/A";
-            
-            window.scrollTo(0, 0);
         }
 
         function showListView() {
@@ -550,8 +498,6 @@
             document.getElementById('detailView').style.display = 'none';
             document.getElementById('searchInput').value = '';
             renderList(allStudentsData);
-            
-            window.scrollTo(0, 0);
         }
     </script>
 </body>
